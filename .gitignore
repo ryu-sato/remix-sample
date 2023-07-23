@@ -1,6 +1,10 @@
 node_modules
 
+# remix
 /.cache
 /build
 /public/build
 .env
+
+# SQLite
+/prisma/dev.db
