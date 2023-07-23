@@ -15,7 +15,6 @@ model User {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   name       String @unique
-  body       String
   taskColor  String
 
   tasks      Task[]
