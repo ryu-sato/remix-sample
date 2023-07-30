@@ -1,10 +1,8 @@
 node_modules
+yarn-error.log
 
 # remix
 /.cache
 /build
 /public/build
 .env
-
-# SQLite
-/prisma/dev.db
