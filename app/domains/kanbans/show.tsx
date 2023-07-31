@@ -18,6 +18,9 @@ export const loader = async ({ params }: LoaderArgs) => {
 
 export default function KanbanShow() {
   const kanban = useLoaderData<typeof loader>();
+  if (kanban == null) {
+    return <></>
+  }
 
   return (
     <div>
