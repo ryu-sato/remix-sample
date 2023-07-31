@@ -50,7 +50,7 @@ function createKanbans() {
                   title: 'topic ブランチに git push された際に、リントチェックとテストをする',
                   body: "## やること\n\n- Github Action で CI 用の workflow を追加する",
                 },
-                {        
+                {
                   category: 'support',
                   title: 'main ブランチにマージされたら demo 環境にデプロイできる',
                   body: "## やること\n\n- Github Action で CD 用の workflow を追加する",
@@ -95,7 +95,7 @@ function createKanbans() {
                   title: 'topic ブランチに git push された際に、リントチェックとテストをする',
                   body: "## やること\n\n- Github Action で CI 用の workflow を追加する",
                 },
-                {        
+                {
                   category: 'support',
                   title: 'main ブランチにマージされたら demo 環境にデプロイできる',
                   body: "## やること\n\n- Github Action で CD 用の workflow を追加する",
@@ -111,15 +111,12 @@ function createKanbans() {
   return kanbans.map((kanban) => {
     return db.kanban.create({
       data: kanban,
-      // include: {
-      //   sprints: {
-      //     include: {
-      //       swimlanes: true,
-      //     },
-      //   },
-      // },
       include: {
-        sprints: true,
+        sprints: {
+          include: {
+            swimlanes: true,
+          },
+        },
       },
     });
   });
