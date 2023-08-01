@@ -49,6 +49,16 @@ function createKanbans() {
                   category: 'support',
                   title: 'topic ブランチに git push された際に、リントチェックとテストをする',
                   body: "## やること\n\n- Github Action で CI 用の workflow を追加する",
+                  tasks: {
+                    create: [
+                      {
+                        title: 'Github Action (ガワ) を作る',
+                      },
+                      {
+                        title: 'eslint をインストールする',
+                      },
+                    ],
+                  },
                 },
                 {
                   category: 'support',
@@ -114,7 +124,11 @@ function createKanbans() {
       include: {
         sprints: {
           include: {
-            swimlanes: true,
+            swimlanes: {
+              include: {
+                tasks: true,
+              },
+            },
           },
         },
       },
