@@ -6,11 +6,6 @@ module.exports = {
   // serverBuildPath: "build/index.js",
   // publicPath: "/build/",
   serverModuleFormat: "cjs",
-  serverDependenciesToBundle: [
-    /^react-dnd.*/,
-    /^@react-dnd.*/,
-    /^dnd-core/,
-  ],
   future: {
     v2_dev: true,
     v2_errorBoundary: true,
