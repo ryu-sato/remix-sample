@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import DraggableTask from "../tasks/DraggableTask";
 import type { SerializeFrom } from "@remix-run/node";
+import { Droppable } from "~/components/Droppable";
 
 const swimlaneWithTasks = Prisma.validator<Prisma.SwimlaneArgs>()({
   include: {
@@ -21,22 +22,25 @@ export default function SwimlaneTableRow(swimlane: SerializeFrom<SwimlaneWithTas
       .map((task) => <DraggableTask key={ task.id } { ...task } />);
   }
 
-  const opens = getTasksByState('OPEN');
-  const inProgresses = getTasksByState('INPROGRESS');
-  const toVerifies = getTasksByState('TOVERIFY');
-  const feedbacks = getTasksByState('FEEDBACK');
-  const dones = getTasksByState('DONE');
-  const rejects = getTasksByState('REJECT');
+  const taskStatuses = ['OPEN', 'INPROGRESS', 'TOVERIFY', 'FEEDBACK', 'DONE', 'REJECT'];
 
   return (
     <tr key={ swimlane.id }>
       <td>{ swimlane.title }</td>
-      <td>{ opens }</td>
-      <td>{ inProgresses }</td>
-      <td>{ toVerifies }</td>
-      <td>{ feedbacks }</td>
-      <td>{ dones }</td>
-      <td>{ rejects }</td>
+      {
+        taskStatuses.map((state) => {
+          const id = `${swimlane.id}_${state}`;
+          return (
+            <td key={ id }>
+              <Droppable id={ id }>
+                <div style={{ width: "300px", height: "300px" }}>
+                  { getTasksByState(state) }
+                </div>
+              </Droppable>
+            </td>
+          )
+        })
+      }
     </tr>
   )
 }
