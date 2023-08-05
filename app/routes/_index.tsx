@@ -1,7 +1,6 @@
 import type { V2_MetaFunction } from "@remix-run/node";
-import KanbanIndex from "~/domains/kanbans/index";
-
-export * from '~/domains/kanbans/index';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -11,7 +10,9 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export default function Index() {
-  return (
-    <KanbanIndex />
-  );
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("/kanbans");
+  }, [navigate]);
 }
