@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@dnd-kit/core": "^6.0.8",
+    "@dnd-kit/sortable": "^7.0.2",
     "@prisma/client": "^5.0.0",
     "@remix-run/css-bundle": "^1.18.1",
     "@remix-run/node": "^1.18.1",
