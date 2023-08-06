@@ -53,9 +53,15 @@ function createKanbans() {
                     create: [
                       {
                         title: 'Github Action (ガワ) を作る',
+                        status: 'INPROGRESS',
+                      },
+                      {
+                        title: 'Github Action を完成させる',
+                        status: 'OPEN',
                       },
                       {
                         title: 'eslint をインストールする',
+                        status: 'OPEN',
                       },
                     ],
                   },
