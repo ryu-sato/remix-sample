@@ -1,5 +1,5 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction } from "@remix-run/node";
+import { json, type LinksFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -7,13 +7,23 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
+export async function loader() {
+  return json({
+    ENV: {
+      API_URL_BASE: process.env.API_URL_BASE,
+    },
+  });
+}
+
 export default function App() {
+  const data = useLoaderData<typeof loader>();
   return (
     <html lang="ja">
       <head>
@@ -25,6 +35,13 @@ export default function App() {
       <body>
         <Outlet />
         <ScrollRestoration />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.ENV = ${JSON.stringify(
+              data.ENV
+            )}`,
+          }}
+        />
         <Scripts />
         <LiveReload />
       </body>

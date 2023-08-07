@@ -1,10 +1,10 @@
 import { Prisma } from "@prisma/client";
-import type { Task } from "@prisma/client";
 import type { SerializeFrom } from "@remix-run/node";
 import { DndContext } from '@dnd-kit/core';
 import SwimlaneTableData from "./SwimlaneTableData";
 import { useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
+import * as Task from '~/services/tasks.client';
 
 const swimlaneWithTasks = Prisma.validator<Prisma.SwimlaneArgs>()({
   include: {
@@ -12,7 +12,6 @@ const swimlaneWithTasks = Prisma.validator<Prisma.SwimlaneArgs>()({
   }
 });
 type SwimlaneWithTasks = Prisma.SwimlaneGetPayload<typeof swimlaneWithTasks>
-type TaskSerializeFrom = SerializeFrom<Task>
 
 function groupBy<ItemType>(array: ItemType[], getKey: (item: ItemType) => string) {
   return array.reduce((result: { [key: string]: ItemType[] }, item: ItemType) => {
@@ -24,7 +23,7 @@ function groupBy<ItemType>(array: ItemType[], getKey: (item: ItemType) => string
 }
 
 export default function SwimlaneTableRow(swimlane: SerializeFrom<SwimlaneWithTasks>) {
-  const [tasksGroupByStatus, setTasksGroupByStatus] = useState(groupBy<TaskSerializeFrom>(swimlane.tasks, t => t.status));
+  const [tasksGroupByStatus, setTasksGroupByStatus] = useState(groupBy<Task.SerializedTask>(swimlane.tasks, t => t.status));
 
   if (swimlane == null) {
     return <></>
@@ -74,11 +73,16 @@ export default function SwimlaneTableRow(swimlane: SerializeFrom<SwimlaneWithTas
     else {
       /* ステータス変更 */
       const statusOfDropOver = over.id;
-      if (draggedTask.status !== statusOfDropOver) {
-        draggedTask.status = statusOfDropOver;
-        setTasksGroupByStatus(groupBy<TaskSerializeFrom>(swimlane.tasks, t => t.status));
+      if (draggedTask.status === statusOfDropOver) {
         return;
       }
+
+      draggedTask.status = statusOfDropOver;
+      setTasksGroupByStatus(groupBy<Task.SerializedTask>(swimlane.tasks, t => t.status));
+      (async () => {
+        await Task.update(draggedTask, { status: statusOfDropOver });
+      })();
+      return;
     }
   }
 }
