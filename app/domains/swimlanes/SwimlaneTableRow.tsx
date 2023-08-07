@@ -12,6 +12,10 @@ const swimlaneWithTasks = Prisma.validator<Prisma.SwimlaneArgs>()({
   }
 });
 type SwimlaneWithTasks = Prisma.SwimlaneGetPayload<typeof swimlaneWithTasks>
+type SwimlaneTableRowProps = {
+  swimlane: SerializeFrom<SwimlaneWithTasks>,
+  orderedTaskStatuses: Array<string>,
+}
 
 function groupBy<ItemType>(array: ItemType[], getKey: (item: ItemType) => string) {
   return array.reduce((result: { [key: string]: ItemType[] }, item: ItemType) => {
@@ -22,24 +26,23 @@ function groupBy<ItemType>(array: ItemType[], getKey: (item: ItemType) => string
   }, {});
 }
 
-export default function SwimlaneTableRow(swimlane: SerializeFrom<SwimlaneWithTasks>) {
-  const [tasksGroupByStatus, setTasksGroupByStatus] = useState(groupBy<Task.SerializedTask>(swimlane.tasks, t => t.status));
+export default function SwimlaneTableRow(props: SwimlaneTableRowProps) {
+  const [tasksGroupByStatus, setTasksGroupByStatus] = useState(groupBy<Task.SerializedTask>(props.swimlane.tasks, t => t.status));
 
-  if (swimlane == null) {
+  if (props.swimlane == null) {
     return <></>
   }
 
-  const orderedTaskStatuses = ['OPEN', 'INPROGRESS', 'TOVERIFY', 'FEEDBACK', 'DONE', 'REJECT'];
   return (
-    <tr key={ swimlane.id }>
+    <tr key={ props.swimlane.id }>
       <DndContext
         onDragEnd={ handleDragEnd }
       >
-        <td>{ swimlane.title }</td>
+        <td>{ props.swimlane.title }</td>
         {
-          orderedTaskStatuses.map((status) => (
+          props.orderedTaskStatuses.map((status) => (
             <SwimlaneTableData
-              key={ `${swimlane.id}_${status}` }
+              key={ `${props.swimlane.id}_${status}` }
               id={ status }
               tasks={ tasksGroupByStatus[status] || [] }
             />
@@ -59,7 +62,7 @@ export default function SwimlaneTableRow(swimlane: SerializeFrom<SwimlaneWithTas
       return;
     }
 
-    if (!orderedTaskStatuses.includes(over.id)) {
+    if (!props.orderedTaskStatuses.includes(over.id)) {
       /* 同一ステータスでの移動 */
       const taskIdOfDropOver = Number(over.id);
       setTasksGroupByStatus((orderedTasks) => {
@@ -78,7 +81,7 @@ export default function SwimlaneTableRow(swimlane: SerializeFrom<SwimlaneWithTas
       }
 
       draggedTask.status = statusOfDropOver;
-      setTasksGroupByStatus(groupBy<Task.SerializedTask>(swimlane.tasks, t => t.status));
+      setTasksGroupByStatus(groupBy<Task.SerializedTask>(props.swimlane.tasks, t => t.status));
       (async () => {
         await Task.update(draggedTask, { status: statusOfDropOver });
       })();
