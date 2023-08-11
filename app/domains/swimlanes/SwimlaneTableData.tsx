@@ -1,15 +1,15 @@
 import type { Task } from "@prisma/client";
-import DraggableTask from "../tasks/DraggableTask";
 import type { SerializeFrom } from "@remix-run/node";
-import { Droppable } from "~/components/Droppable";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
+import { Droppable } from "~/components/Droppable";
+import { DraggableTask } from "~/domains/tasks/DraggableTask";
 
 type SwimlaneTableDataProps = {
   id: string,
   tasks: SerializeFrom<Task[]>,
 }
 
-export default function SwimlaneTableData(props: SwimlaneTableDataProps) {
+export function SwimlaneTableData(props: SwimlaneTableDataProps) {
   return (
     <td>
       <Droppable id={ props.id }>

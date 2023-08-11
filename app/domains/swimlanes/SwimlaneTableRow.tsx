@@ -1,9 +1,9 @@
 import { Prisma } from "@prisma/client";
 import type { SerializeFrom } from "@remix-run/node";
 import { DndContext } from '@dnd-kit/core';
-import SwimlaneTableData from "./SwimlaneTableData";
 import { useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
+import { SwimlaneTableData } from "~/domains/swimlanes/SwimlaneTableData";
 import * as Task from '~/services/tasks.client';
 
 const swimlaneWithTasks = Prisma.validator<Prisma.SwimlaneArgs>()({
@@ -26,7 +26,7 @@ function groupBy<ItemType>(array: ItemType[], getKey: (item: ItemType) => string
   }, {});
 }
 
-export default function SwimlaneTableRow(props: SwimlaneTableRowProps) {
+export function SwimlaneTableRow(props: SwimlaneTableRowProps) {
   const [tasksGroupByStatus, setTasksGroupByStatus] = useState(groupBy<Task.SerializedTask>(props.swimlane.tasks, t => t.status));
 
   if (props.swimlane == null) {

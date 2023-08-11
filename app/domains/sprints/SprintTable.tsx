@@ -1,7 +1,8 @@
 import type { SerializeFrom } from "@remix-run/node";
-import SwimlaneTableRow from "../swimlanes/SwimlaneTableRow";
 import { Prisma } from "@prisma/client";
 import { DndContext } from '@dnd-kit/core';
+import { SwimlaneTableRow } from "~/domains/swimlanes/SwimlaneTableRow";
+import { SwimlaneTableHeader } from "~/domains/swimlanes/SwimlaneTableHeader";
 import SwimlaneTableHeader from "../swimlanes/SwimlaneTableHeader";
 
 const sprintWithSwimlanes = Prisma.validator<Prisma.SprintArgs>()({
@@ -15,7 +16,7 @@ const sprintWithSwimlanes = Prisma.validator<Prisma.SprintArgs>()({
 });
 type SprintWithSwimlanes = Prisma.SprintGetPayload<typeof sprintWithSwimlanes>
 
-export default function SprintTable(sprint: SerializeFrom<SprintWithSwimlanes>) {
+export function SprintTable(sprint: SerializeFrom<SprintWithSwimlanes>) {
   if (sprint == null) {
     return <></>
   }

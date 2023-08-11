@@ -1,7 +1,7 @@
 type SwimlaneTableHeaderProps = {
   orderedTaskStatuses: Array<string>,
 }
-export default function SwimlaneTableHeader(props: SwimlaneTableHeaderProps) {
+export function SwimlaneTableHeader(props: SwimlaneTableHeaderProps) {
   // [TODO] i18n 化
   const taskStatusesJa: { [key: string]: string } = {
     OPEN: '新規',

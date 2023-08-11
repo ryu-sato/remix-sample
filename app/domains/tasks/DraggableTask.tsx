@@ -2,7 +2,7 @@ import type { Task } from "@prisma/client";
 import type { SerializeFrom } from "@remix-run/node";
 import { SortableItem } from "~/components/SortableItem";
 
-export default function DraggableTask(task: SerializeFrom<Task>) {
+export function DraggableTask(task: SerializeFrom<Task>) {
   if (task == null) {
     return <></>
   }

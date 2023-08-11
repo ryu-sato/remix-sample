@@ -1,5 +1,5 @@
 import { useLoaderData } from "@remix-run/react";
-import SprintTable from "~/domains/sprints/SprintTable";
+import { SprintTable } from "~/domains/sprints/SprintTable";
 import type { V2_MetaFunction, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { db } from "~/services/db.server";
