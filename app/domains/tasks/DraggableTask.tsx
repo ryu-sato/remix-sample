@@ -11,13 +11,13 @@ export function DraggableTask(task: SerializeFrom<Task>) {
   return (
     <SortableItem id={ String(task.id) }>
       <div style={{ width: "100px", height: "100px" }}>
-        <div>
-          <Link
-            to={ "/tasks/" + String(task.id) }
-          >
+        <Link
+          to={ "/tasks/" + String(task.id) }
+        >
+          <div>
             { task.id }
-          </Link>
-        </div>
+          </div>
+        </Link>
 
         { task.title }
       </div>
