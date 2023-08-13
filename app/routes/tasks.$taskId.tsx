@@ -75,7 +75,7 @@ export default function Show() {
       <dl>
         <dt>id</dt><dd>{ task.id }</dd>
         <dt>title</dt><dd>{ task.title }</dd>
-        <dt>body</dt><dd>{ task.title }</dd>
+        <dt>body</dt><dd>{ task.body }</dd>
         <dt>sprint</dt>
         <dd>
           <Link
