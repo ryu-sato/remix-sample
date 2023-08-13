@@ -26,7 +26,7 @@ export function SortableItem(props: SortableItemProps) {
       ref={ setNodeRef }
       style={{
         ...style,
-        cursor: "pointer",
+        cursor: "move",
       }}
       { ...attributes }
       { ...listeners }
