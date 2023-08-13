@@ -3,7 +3,6 @@ import { Prisma } from "@prisma/client";
 import { DndContext } from '@dnd-kit/core';
 import { SwimlaneTableRow } from "~/domains/swimlanes/SwimlaneTableRow";
 import { SwimlaneTableHeader } from "~/domains/swimlanes/SwimlaneTableHeader";
-import SwimlaneTableHeader from "../swimlanes/SwimlaneTableHeader";
 
 const sprintWithSwimlanes = Prisma.validator<Prisma.SprintArgs>()({
   include: {
@@ -26,11 +25,17 @@ export function SprintTable(sprint: SerializeFrom<SprintWithSwimlanes>) {
     <DndContext>
       <table border={1}>
         <thead>
-          <SwimlaneTableHeader orderedTaskStatuses={ orderedTaskStatuses } />
+          <SwimlaneTableHeader
+            orderedTaskStatuses={ orderedTaskStatuses }
+          />
         </thead>
         <tbody>
           { sprint.swimlanes.map((swimlane) => (
-            <SwimlaneTableRow key={ swimlane.id } swimlane={ swimlane } orderedTaskStatuses={ orderedTaskStatuses } />
+            <SwimlaneTableRow
+              key={ swimlane.id }
+              swimlane={ swimlane }
+              orderedTaskStatuses={ orderedTaskStatuses }
+            />
           )) }
         </tbody>
       </table>
@@ -40,7 +45,7 @@ export function SprintTable(sprint: SerializeFrom<SprintWithSwimlanes>) {
   return (
     <div>
       <div>
-        { sprint.name } ({ String(sprint.beginAt) } - { String(sprint.endAt) })
+        { sprint.name } ({ sprint.beginAt.toString() } - { sprint.endAt.toString() })
       </div>
       <div>
         { swimlanes }

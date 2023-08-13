@@ -4,9 +4,13 @@ import { db } from "~/services/db.server";
 import { Link, useLoaderData } from "@remix-run/react";
 
 export const loader = async ({ params }: LoaderArgs) => {
+  if (params.kanbanId == null) {
+    return json({ status: 400 });
+  }
+
   const kanban = await db.kanban.findFirst({
     where: {
-      id: parseInt(params.kanbanId || '0'),
+      id: parseInt(params.kanbanId),
     },
     include: {
       sprints: true
@@ -35,7 +39,7 @@ export default function Show() {
         kanban.sprints.map((sprint) => (
           <div key={ sprint.id }>
             <Link
-              to={ "/sprints/" + sprint.id.toString() }
+              to={ "/sprints/" + String(sprint.id) }
             >
               { sprint.name }
             </Link>

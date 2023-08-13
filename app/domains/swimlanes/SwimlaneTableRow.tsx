@@ -1,9 +1,10 @@
 import { Prisma } from "@prisma/client";
-import type { SerializeFrom } from "@remix-run/node";
+import { type SerializeFrom } from "@remix-run/node";
 import { DndContext } from '@dnd-kit/core';
 import { useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import { SwimlaneTableData } from "~/domains/swimlanes/SwimlaneTableData";
+import { NewTask } from "~/domains/tasks/NewTask";
 import * as Task from '~/services/tasks.client';
 
 const swimlaneWithTasks = Prisma.validator<Prisma.SwimlaneArgs>()({
@@ -28,6 +29,7 @@ function groupBy<ItemType>(array: ItemType[], getKey: (item: ItemType) => string
 
 export function SwimlaneTableRow(props: SwimlaneTableRowProps) {
   const [tasksGroupByStatus, setTasksGroupByStatus] = useState(groupBy<Task.SerializedTask>(props.swimlane.tasks, t => t.status));
+  const [hiddenNewTask, setHiddenNewTask] = useState(true);
 
   if (props.swimlane == null) {
     return <></>
@@ -36,23 +38,85 @@ export function SwimlaneTableRow(props: SwimlaneTableRowProps) {
   return (
     <tr key={ props.swimlane.id }>
       <DndContext
-        onDragEnd={ handleDragEnd }
+        onDragEnd={ moveTask }
       >
-        <td>{ props.swimlane.title }</td>
+        <td>
+          <div>
+            <button
+              type="button"
+              onClick={ showNewTask }
+              disabled={ !hiddenNewTask }
+            >
+              &#043;
+            </button>
+          </div>
+          <div>{ props.swimlane.title }</div>
+        </td>
         {
           props.orderedTaskStatuses.map((status) => (
-            <SwimlaneTableData
+            <td
               key={ `${props.swimlane.id}_${status}` }
-              id={ status }
-              tasks={ tasksGroupByStatus[status] || [] }
-            />
+            >
+              { status == 'OPEN' &&
+                <NewTask
+                  style={
+                    {
+                      display: hiddenNewTask ? 'none' : undefined,
+                    }
+                  }
+                  onCancel={ cancelNewTask }
+                  onSubmit={ createNewTask }
+                  swimlaneId={ props.swimlane.id }
+                />
+              }
+              <SwimlaneTableData
+                id={ status }
+                tasks={ tasksGroupByStatus[status] || [] }
+              />
+            </td>
           ))
         }
       </DndContext>
     </tr>
   )
 
-  function handleDragEnd(event) {
+  function showNewTask(_event) {
+    setHiddenNewTask(false);
+  }
+
+  function cancelNewTask(_event) {
+    setHiddenNewTask(true);
+  }
+
+  function createNewTask(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const formData = new FormData(form);
+
+    const title = formData.get("title");
+    const body = formData.get("body");
+    const swimlaneId = formData.get("swimlaneId");
+
+    if (title == null || body == null || swimlaneId == null) {
+      return;
+    }
+    if (typeof title !== 'string' || typeof body !== 'string' || typeof swimlaneId !== 'string') {
+      return;
+    }
+
+    (async () => {
+        await Task.create({
+          title,
+          body,
+          swimlaneId: parseInt(swimlaneId),
+        });
+    })();
+
+    setHiddenNewTask(true);
+  }
+
+  function moveTask(event) {
     const { active, over } = event;
 
     /* ドラッグしたタスクが不明、またはドロップがキャンセルされた */

@@ -11,17 +11,22 @@ type SwimlaneTableDataProps = {
 
 export function SwimlaneTableData(props: SwimlaneTableDataProps) {
   return (
-    <td>
-      <Droppable id={ props.id }>
-        <SortableContext
-          items={ props.tasks.map(it => String(it.id)) }
-          strategy={ rectSortingStrategy }
+    <Droppable id={ props.id }>
+      <SortableContext
+        items={ props.tasks.map(it => String(it.id)) }
+        strategy={ rectSortingStrategy }
+      >
+        <div
+          style={
+            {
+              width: "300px",
+              height: "300px"
+            }
+          }
         >
-          <div style={{ width: "300px", height: "300px" }}>
-            { props.tasks.map((task) => <DraggableTask key={ String(task.id) } { ...task } />) }
-          </div>
-        </SortableContext>
-      </Droppable>
-    </td>
+          { props.tasks.map((task) => <DraggableTask key={ String(task.id) } { ...task } />) }
+        </div>
+      </SortableContext>
+    </Droppable>
   )
 }

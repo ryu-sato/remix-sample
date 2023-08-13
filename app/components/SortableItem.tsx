@@ -22,8 +22,16 @@ export function SortableItem(props: SortableItemProps) {
   };
 
   return (
-    <div ref={ setNodeRef } style={ style } { ...attributes } { ...listeners }>
+    <button
+      ref={ setNodeRef }
+      style={{
+        ...style,
+        cursor: "pointer",
+      }}
+      { ...attributes }
+      { ...listeners }
+    >
       { props.children }
-    </div>
+    </button>
   );
 }

@@ -11,9 +11,13 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export const loader = async ({ params }: LoaderArgs) => {
+  if (params.sprintId == null) {
+    return json({ status: 400 });
+  }
+
   const sprint = await db.sprint.findFirst({
     where: {
-      id: parseInt(params.sprintId || '0'),
+      id: parseInt(params.sprintId),
     },
     include: {
       swimlanes: {

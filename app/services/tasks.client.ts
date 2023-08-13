@@ -4,6 +4,10 @@ import type { SerializeFrom } from "@remix-run/node";
 
 export type SerializedTask = SerializeFrom<Task>
 
+export async function create(task: Partial<SerializedTask>) {
+  await axios.post(`/tasks`, task);
+}
+
 export async function update(task: SerializedTask, updateFields: Partial<SerializedTask>) {
-  await axios.post(`/tasks/${ task.id }`, updateFields);
+  await axios.put(`/tasks/${ task.id }`, updateFields);
 }

@@ -14,7 +14,10 @@ export function Droppable(props: DroppableProps) {
   };
 
   return (
-    <div ref={ setNodeRef } style={ style }>
+    <div
+      ref={ setNodeRef }
+      style={ style }
+    >
       { props.children }
     </div>
   );

@@ -9,9 +9,9 @@ export function DraggableTask(task: SerializeFrom<Task>) {
 
   return (
     <SortableItem id={ String(task.id) }>
-      <button style={{ width: "100px", height: "100px" }}>
+      <div style={{ width: "100px", height: "100px" }}>
         { task.title }
-      </button>
+      </div>
     </SortableItem>
   )
 }

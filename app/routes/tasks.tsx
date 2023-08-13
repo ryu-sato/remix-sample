@@ -3,17 +3,16 @@ import { json } from "@remix-run/node";
 import { db } from "~/services/db.server";
 
 export const action = async ({ request, params }: ActionArgs) => {
-  if (params.taskId == null) {
+  const { title, body, swimlaneId } = await request.json() as unknown as { title: string, body: string, swimlaneId: number };
+  if (title == null || body == null || swimlaneId == null) {
     return json({ status: 400 });
   }
 
-  const body = await request.json();
-  const task = await db.task.update({
-    where: {
-      id: parseInt(params.taskId),
-    },
+  const task = await db.task.create({
     data: {
-      ...body,
+      title,
+      body,
+      swimlaneId,
     }
   });
 

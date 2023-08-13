@@ -28,7 +28,7 @@ export default function Index() {
           return (
             <div key={ kanban.id }>
               <Link
-                to={ kanban.id.toString() }
+                to={ String(kanban.id) }
               >
                 { kanban.name }
               </Link>
