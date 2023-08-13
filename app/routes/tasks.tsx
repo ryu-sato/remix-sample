@@ -1,3 +1,4 @@
+import { Outlet } from "@remix-run/react";
 import type { ActionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { db } from "~/services/db.server";
@@ -18,3 +19,11 @@ export const action = async ({ request }: ActionArgs) => {
 
   return json(task);
 };
+
+export default function TaskRoute() {
+  return (
+    <main>
+      <Outlet />
+    </main>
+  );
+}
