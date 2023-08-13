@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { type SerializeFrom } from "@remix-run/node";
+import type { DragEndEvent } from '@dnd-kit/core';
 import { DndContext } from '@dnd-kit/core';
 import { useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
@@ -116,7 +117,7 @@ export function SwimlaneTableRow(props: SwimlaneTableRowProps) {
     setHiddenNewTask(true);
   }
 
-  function moveTask(event) {
+  function moveTask(event: DragEndEvent) {
     const { active, over } = event;
 
     /* ドラッグしたタスクが不明、またはドロップがキャンセルされた */
@@ -126,7 +127,7 @@ export function SwimlaneTableRow(props: SwimlaneTableRowProps) {
       return;
     }
 
-    if (!props.orderedTaskStatuses.includes(over.id)) {
+    if (!props.orderedTaskStatuses.includes(String(over.id))) {
       /* 同一ステータスでの移動 */
       const taskIdOfDropOver = Number(over.id);
       setTasksGroupByStatus((orderedTasks) => {
@@ -139,7 +140,7 @@ export function SwimlaneTableRow(props: SwimlaneTableRowProps) {
     }
     else {
       /* ステータス変更 */
-      const statusOfDropOver = over.id;
+      const statusOfDropOver = String(over.id);
       if (draggedTask.status === statusOfDropOver) {
         return;
       }
