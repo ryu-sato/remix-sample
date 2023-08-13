@@ -31,7 +31,7 @@ export function NewTask(props: NewTaskProps) {
         }
       >
         <Draggable id="newTask">
-          <Form action="/tasks" method="POST" onSubmit={ props.onSubmit }>
+          <Form onSubmit={ props.onSubmit }>
             <input type="hidden" name="swimlaneId" value={ props.swimlaneId }></input>
             <div>
               <div>title</div>
