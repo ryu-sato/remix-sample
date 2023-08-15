@@ -13,7 +13,7 @@ import { FormTextArea } from '~/components/FormTextArea';
 
 const formData = zfd.formData({
   title: zfd.text(),
-  body: zfd.text().optional(),
+  body: zfd.text(z.string().optional()),
   swimlaneId: zfd.numeric(z.number().min(1)),
 });
 
