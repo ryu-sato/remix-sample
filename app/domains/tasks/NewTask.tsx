@@ -12,7 +12,7 @@ import { FormSubmitButton } from '~/components/FormSubmitButton';
 import { FormTextArea } from '~/components/FormTextArea';
 
 const formData = zfd.formData({
-  title: zfd.text().optional(),
+  title: zfd.text(),
   body: zfd.text().optional(),
   swimlaneId: zfd.numeric(z.number().min(1)),
 });
