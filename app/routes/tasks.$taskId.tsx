@@ -5,7 +5,7 @@ import { db } from "~/services/db.server";
 
 export const loader = async ({ params }: LoaderArgs) => {
   if (params.taskId == null) {
-    return json({ status: 400 });
+    return json({}, { status: 400 });
   }
 
   const task = await db.task.findFirst({
@@ -25,7 +25,7 @@ export const loader = async ({ params }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   if (params.taskId == null) {
-    return json({ status: 400 });
+    return json({}, { status: 400 });
   }
 
   // DELETE method

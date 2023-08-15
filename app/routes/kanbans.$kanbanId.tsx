@@ -5,7 +5,7 @@ import { Link, useLoaderData } from "@remix-run/react";
 
 export const loader = async ({ params }: LoaderArgs) => {
   if (params.kanbanId == null) {
-    return json({ status: 400 });
+    return json({}, { status: 400 });
   }
 
   const kanban = await db.kanban.findFirst({
