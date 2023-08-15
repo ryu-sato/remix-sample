@@ -5,7 +5,7 @@ import { DndContext } from '@dnd-kit/core';
 import { useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import { SwimlaneTableData } from "~/domains/swimlanes/SwimlaneTableData";
-import { NewTask } from "~/domains/tasks/NewTask";
+import { NewTask, taskTaskCreateFormData } from "~/domains/tasks/NewTask";
 import * as Task from '~/services/tasks.client';
 
 const swimlaneWithTasks = Prisma.validator<Prisma.SwimlaneArgs>()({
@@ -81,37 +81,22 @@ export function SwimlaneTableRow(props: SwimlaneTableRowProps) {
     </tr>
   )
 
-  function showNewTask(_event) {
+  function showNewTask(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     setHiddenNewTask(false);
   }
 
-  function cancelNewTask(_event) {
+  function cancelNewTask(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     setHiddenNewTask(true);
   }
 
-  function createNewTask(event) {
+  function createNewTask(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const form = event.target;
-    const formData = new FormData(form);
-
-    const title = formData.get("title");
-    const body = formData.get("body");
-    const swimlaneId = formData.get("swimlaneId");
-
-    if (title == null || body == null || swimlaneId == null) {
-      return;
-    }
-    if (typeof title !== 'string' || typeof body !== 'string' || typeof swimlaneId !== 'string') {
-      return;
-    }
+    const formData = new FormData(event.target as HTMLFormElement);
+    const newTaskData = taskTaskCreateFormData.parse(formData);
 
     (async () => {
-        await Task.create({
-          title,
-          body,
-          swimlaneId: parseInt(swimlaneId),
-        });
+      await Task.create(newTaskData);
     })();
 
     setHiddenNewTask(true);

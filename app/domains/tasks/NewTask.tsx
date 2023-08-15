@@ -1,9 +1,30 @@
 import type { FormEventHandler, MouseEventHandler} from 'react';
 import { useState } from 'react';
-import { Form } from "@remix-run/react";
 import { DndContext } from '@dnd-kit/core';
 import type {Coordinates} from '@dnd-kit/utilities';
+import { ValidatedForm } from "remix-validated-form";
+import { withZod } from "@remix-validated-form/with-zod";
+import { zfd } from "zod-form-data";
+import { z } from "zod";
 import { Draggable } from "~/components/Draggable";
+import { FormInput } from '~/components/FormInput';
+import { FormSubmitButton } from '~/components/FormSubmitButton';
+import { FormTextArea } from '~/components/FormTextArea';
+
+const formData = zfd.formData({
+  title: zfd.text().optional(),
+  body: zfd.text().optional(),
+  swimlaneId: zfd.numeric(z.number().min(1)),
+});
+
+const validator = withZod(
+  z.object({
+    title: z.string()
+      .min(1, { message: "title is required" }),
+    body: z.string().optional(),
+    swimlaneId: z.coerce.number().positive().int(),
+  })
+);
 
 type NewTaskProps = {
   style?: React.CSSProperties,
@@ -11,6 +32,9 @@ type NewTaskProps = {
   onSubmit: FormEventHandler<HTMLFormElement>,
   swimlaneId: number,
 }
+
+export const taskTaskCreateFormData = formData;
+export const taskTaskCreateFormValidator = validator;
 export function NewTask(props: NewTaskProps) {
   const [{ x, y }, setCoordinates] = useState<Coordinates>({ x: 0, y: 0 });
 
@@ -30,22 +54,27 @@ export function NewTask(props: NewTaskProps) {
           }
         }
       >
-        <Draggable id="newTask">
-          <Form onSubmit={ props.onSubmit }>
-            <input type="hidden" name="swimlaneId" value={ props.swimlaneId }></input>
-            <div>
-              <div>title</div>
-              <div><input type="text" name="title"></input></div>
-            </div>
-            <div>
-              <div>body</div>
-              <div><textarea name="body"></textarea></div>
-            </div>
+        <Draggable id="newTaskDraggable">
+          <ValidatedForm
+            method="post"
+            validator={ validator }
+            defaultValues={
+              {
+                swimlaneId: props.swimlaneId,
+              }
+            }
+            resetAfterSubmit={ true }
+            onSubmit={ (_data, event) => props.onSubmit(event) }
+          >
+            <FormInput type="number" name="swimlaneId" label="swimlaneId" hidden={ true } />
+
+            <FormInput type="text" name="title" label="title" />
+            <FormTextArea name="body" label="body" />
             <div>
               <button type="button" onClick={ props.onCancel }>Cancel</button>
-              <button type="submit">Create</button>
+              <FormSubmitButton text="Create" textProcessing="Creating..." />
             </div>
-          </Form>
+          </ValidatedForm>
         </Draggable>
       </div>
     </DndContext>
