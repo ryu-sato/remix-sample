@@ -132,7 +132,7 @@ export function SwimlaneTableRow(props: SwimlaneTableRowProps) {
       }
 
       draggedTask.status = statusOfDropOver;
-      setTasksGroupByStatus(groupBy<Task.SerializedTask>(Object.values(tasksGroupByStatus).flat(), t => t.status));
+      setTasksGroupByStatus(groupBy<Task.SerializedTask>(allTasks, t => t.status));
       (async () => {
         await Task.update(draggedTask, { status: statusOfDropOver });
       })();
