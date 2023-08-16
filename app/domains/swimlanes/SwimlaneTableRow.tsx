@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { type SerializeFrom } from "@remix-run/node";
 import type { DragEndEvent } from '@dnd-kit/core';
 import { DndContext } from '@dnd-kit/core';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import { SwimlaneTableData } from "~/domains/swimlanes/SwimlaneTableData";
 import { NewTask, taskCreateFormData } from "~/domains/tasks/NewTask";
@@ -29,8 +29,12 @@ function groupBy<ItemType>(array: ItemType[], getKey: (item: ItemType) => string
 }
 
 export function SwimlaneTableRow(props: SwimlaneTableRowProps) {
-  const [tasksGroupByStatus, setTasksGroupByStatus] = useState(groupBy<Task.SerializedTask>(props.swimlane.tasks, t => t.status));
+  const [tasksGroupByStatus, setTasksGroupByStatus] = useState({} as { [key: string]: Task.SerializedTask[] });
   const [hiddenNewTask, setHiddenNewTask] = useState(true);
+
+  useEffect(() => {
+    setTasksGroupByStatus(groupBy<Task.SerializedTask>(props.swimlane.tasks, t => t.status));
+  }, [props.swimlane.tasks]);
 
   if (props.swimlane == null) {
     return <></>

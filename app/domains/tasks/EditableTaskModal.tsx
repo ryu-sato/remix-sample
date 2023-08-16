@@ -18,6 +18,9 @@ const zod = {
   body: z
     .string()
     .optional(),
+  status: z
+    .enum(['OPEN', 'INPROGRESS', 'TOVERIFY', 'DONE', 'REJECT'])
+    .optional(),
   swimlaneId: z
     .coerce
     .number()
@@ -29,12 +32,13 @@ const zod = {
 type EditableTaskModalProps = {
   task?: SerializeFrom<Task> | null,
   onCancel: MouseEventHandler<HTMLButtonElement>,
-  onSubmit: FormEventHandler<HTMLFormElement>,
+  onSubmit?: FormEventHandler<HTMLFormElement>,
 }
 
 export const taskUpdateFormData = zfd.formData({
   title: zfd.text(zod.title),
   body: zfd.text(zod.body),
+  status: zfd.text(zod.status),
   swimlaneId: zfd.numeric(zod.swimlaneId),
 });
 
@@ -52,18 +56,20 @@ export function EditableTaskModal(props: EditableTaskModalProps) {
       validator={ taskCreateFormValidator }
       defaultValues={
         {
-          swimlaneId: props.task?.swimlaneId ?? undefined,
-          title: props.task?.title ?? undefined,
-          body: props.task?.body ?? undefined,
+          swimlaneId: props.task.swimlaneId ?? undefined,
+          title: props.task.title ?? undefined,
+          body: props.task.body ?? undefined,
+          status: props.task.status ?? undefined,
         }
       }
       resetAfterSubmit={ true }
-      onSubmit={ (_data, event) => props.onSubmit(event) }
+      onSubmit={ (_data, event) => props.onSubmit && props.onSubmit(event) }
     >
       <input type="hidden" name="intent" value="put" />
 
       <FormInput type="number" name="swimlaneId" label="swimlaneId" />
       <FormInput type="text" name="title" label="title" />
+      <FormInput type="text" name="status" label="status" />
       <FormTextArea name="body" label="body" />
       <div>
         <button type="reset" onClick={ props.onCancel }>Cancel</button>

@@ -1,12 +1,12 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { taskCreateFormValidator } from "~/domains/tasks/NewTask";
+import { taskUpdateFormValidator } from "~/domains/tasks/EditableTaskModal";
 import { db } from "~/services/db.server";
 
 export const action = async ({ request, params }: ActionArgs) => {
   switch(request.method) {
     case 'PUT': {
-      const validationResult = await taskCreateFormValidator.validate(await request.json());
+      const validationResult = await taskUpdateFormValidator.validate(await request.json());
       if (validationResult.error) {
         console.log(validationResult.error);
         return json({}, { status: 400 });

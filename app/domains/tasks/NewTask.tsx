@@ -18,6 +18,8 @@ const zod = {
   body: z
     .string()
     .optional(),
+  status: z
+    .enum(['OPEN', 'INPROGRESS', 'TOVERIFY', 'DONE', 'REJECT']),
   swimlaneId: z
     .coerce
     .number()
@@ -35,6 +37,7 @@ type NewTaskProps = {
 export const taskCreateFormData = zfd.formData({
   title: zfd.text(zod.title),
   body: zfd.text(zod.body),
+  status: zfd.text(zod.status),
   swimlaneId: zfd.numeric(zod.swimlaneId),
 });
 
@@ -66,12 +69,14 @@ export function NewTask(props: NewTaskProps) {
             defaultValues={
               {
                 swimlaneId: props.swimlaneId,
+                status: 'OPEN',
               }
             }
             resetAfterSubmit={ true }
             onSubmit={ (_data, event) => props.onSubmit(event) }
           >
             <FormInput type="number" name="swimlaneId" label="swimlaneId" hidden={ true } />
+            <FormInput type="text" name="status" label="status" hidden={ true } />
 
             <FormInput type="text" name="title" label="title" />
             <FormTextArea name="body" label="body" />
