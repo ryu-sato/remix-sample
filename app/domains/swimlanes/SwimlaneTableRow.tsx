@@ -5,7 +5,7 @@ import { DndContext } from '@dnd-kit/core';
 import { useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import { SwimlaneTableData } from "~/domains/swimlanes/SwimlaneTableData";
-import { NewTask, taskTaskCreateFormData } from "~/domains/tasks/NewTask";
+import { NewTask, taskCreateFormData } from "~/domains/tasks/NewTask";
 import * as Task from '~/services/tasks.client';
 
 const swimlaneWithTasks = Prisma.validator<Prisma.SwimlaneArgs>()({
@@ -93,7 +93,7 @@ export function SwimlaneTableRow(props: SwimlaneTableRowProps) {
     event.preventDefault();
 
     const formData = new FormData(event.target as HTMLFormElement);
-    const newTaskData = taskTaskCreateFormData.parse(formData);
+    const newTaskData = taskCreateFormData.parse(formData);
 
     (async () => {
       const task = await Task.create(newTaskData);

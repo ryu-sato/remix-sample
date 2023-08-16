@@ -25,14 +25,6 @@ const zod = {
     .int(),
 };
 
-const formData = zfd.formData({
-  title: zfd.text(zod.title),
-  body: zfd.text(zod.body),
-  swimlaneId: zfd.numeric(zod.swimlaneId),
-});
-
-const validator = withZod(z.object(zod));
-
 type NewTaskProps = {
   style?: React.CSSProperties,
   onCancel: MouseEventHandler<HTMLButtonElement>,
@@ -40,8 +32,14 @@ type NewTaskProps = {
   swimlaneId: number,
 }
 
-export const taskTaskCreateFormData = formData;
-export const taskTaskCreateFormValidator = validator;
+export const taskCreateFormData = zfd.formData({
+  title: zfd.text(zod.title),
+  body: zfd.text(zod.body),
+  swimlaneId: zfd.numeric(zod.swimlaneId),
+});
+
+export const taskCreateFormValidator = withZod(z.object(zod));
+
 export function NewTask(props: NewTaskProps) {
   const [{ x, y }, setCoordinates] = useState<Coordinates>({ x: 0, y: 0 });
 
@@ -64,7 +62,7 @@ export function NewTask(props: NewTaskProps) {
         <Draggable id="newTaskDraggable">
           <ValidatedForm
             method="post"
-            validator={ validator }
+            validator={ taskCreateFormValidator }
             defaultValues={
               {
                 swimlaneId: props.swimlaneId,

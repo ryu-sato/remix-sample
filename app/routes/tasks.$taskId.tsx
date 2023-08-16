@@ -2,6 +2,7 @@ import { Form, Link, useLoaderData } from "@remix-run/react";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { db } from "~/services/db.server";
+import { taskUpdateFormValidator } from "~/domains/tasks/EditableTaskModal";
 
 export const loader = async ({ params }: LoaderArgs) => {
   const task = await db.task.findUnique({
@@ -32,6 +33,29 @@ export const action = async ({ request, params }: ActionArgs) => {
         where: {
           id: parseInt(params.taskId),
         },
+        include: {
+          swimlane: {
+            include: {
+              sprint: true,
+            },
+          },
+        },
+      });
+      return redirect(`/sprints/${ task.swimlane.sprint.id }`);
+    }
+
+    case 'PUT': {
+      const validationResult = await taskUpdateFormValidator.validate(form);
+      if (validationResult.error) {
+        console.log(validationResult.error);
+        return json({}, { status: 400 });
+      }
+
+      const task = await db.task.update({
+        where: {
+          id: parseInt(params.taskId),
+        },
+        data: validationResult.data,
         include: {
           swimlane: {
             include: {

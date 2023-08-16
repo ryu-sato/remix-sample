@@ -1,6 +1,7 @@
 import type { Task } from "@prisma/client";
 import type { SerializeFrom } from "@remix-run/node";
 import { Link } from "@remix-run/react";
+import { createSearchParams } from "react-router-dom";
 import { SortableItem } from "~/components/SortableItem";
 
 export function DraggableTask(task: SerializeFrom<Task>) {
@@ -20,6 +21,21 @@ export function DraggableTask(task: SerializeFrom<Task>) {
         </Link>
 
         { task.title }
+
+        <Link
+          to={{
+            search: createSearchParams({
+              taskId: String(task.id),
+            }).toString(),
+          }}
+          preventScrollReset={ true }
+          replace={ true }
+          reloadDocument={ false }
+        >
+          <button>
+            &#9998;
+          </button>
+        </Link>
       </div>
     </SortableItem>
   )

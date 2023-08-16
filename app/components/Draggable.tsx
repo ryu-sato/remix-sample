@@ -27,7 +27,8 @@ export function Draggable(props: DraggableProps) {
         style={
           {
             backgroundColor: "lightgray",
-            cursor: "move",          }
+            cursor: "move",
+          }
         }
         { ...listeners }
         { ...attributes }
