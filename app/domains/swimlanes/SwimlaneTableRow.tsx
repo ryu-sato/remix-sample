@@ -81,11 +81,11 @@ export function SwimlaneTableRow(props: SwimlaneTableRowProps) {
     </tr>
   )
 
-  function showNewTask(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function showNewTask(_event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     setHiddenNewTask(false);
   }
 
-  function cancelNewTask(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function cancelNewTask(_event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     setHiddenNewTask(true);
   }
 
@@ -96,7 +96,8 @@ export function SwimlaneTableRow(props: SwimlaneTableRowProps) {
     const newTaskData = taskTaskCreateFormData.parse(formData);
 
     (async () => {
-      await Task.create(newTaskData);
+      const task = await Task.create(newTaskData);
+      setTasksGroupByStatus(groupBy<Task.SerializedTask>([...Object.values(tasksGroupByStatus).flat(), task], t => t.status));
     })();
 
     setHiddenNewTask(true);
@@ -131,7 +132,7 @@ export function SwimlaneTableRow(props: SwimlaneTableRowProps) {
       }
 
       draggedTask.status = statusOfDropOver;
-      setTasksGroupByStatus(groupBy<Task.SerializedTask>(props.swimlane.tasks, t => t.status));
+      setTasksGroupByStatus(groupBy<Task.SerializedTask>(Object.values(tasksGroupByStatus).flat(), t => t.status));
       (async () => {
         await Task.update(draggedTask, { status: statusOfDropOver });
       })();

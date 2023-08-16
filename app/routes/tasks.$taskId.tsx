@@ -27,37 +27,30 @@ export const action = async ({ request, params }: ActionArgs) => {
   if (params.taskId == null) {
     return json({}, { status: 400 });
   }
-
-  // DELETE method
   const form = await request.formData();
-  if (form.get("intent") === "delete") {
-    const task = await db.task.delete({
-      where: {
-        id: parseInt(params.taskId),
-      },
-      include: {
-        swimlane: {
-          include: {
-            sprint: true,
+  const method = form.get("intent") || request.method;
+
+  switch(method.toString().toUpperCase()) {
+    case 'DELETE': {
+      const task = await db.task.delete({
+        where: {
+          id: parseInt(params.taskId),
+        },
+        include: {
+          swimlane: {
+            include: {
+              sprint: true,
+            },
           },
         },
-      },
-    });
-    return redirect(`/sprints/${ task.swimlane.sprint.id }`);
-  }
-
-  // POST method
-  const body = await request.json();
-  const task = await db.task.update({
-    where: {
-      id: parseInt(params.taskId),
-    },
-    data: {
-      ...body,
+      });
+      return redirect(`/sprints/${ task.swimlane.sprint.id }`);
     }
-  });
 
-  return json(task);
+    default: {
+      return json({}, { status: 405 });
+    }
+  }
 };
 
 export default function Show() {
