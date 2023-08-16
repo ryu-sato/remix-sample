@@ -1,14 +1,14 @@
-import type { FormEventHandler, MouseEventHandler } from "react";
-import type { Task } from "@prisma/client";
-import type { SerializeFrom } from "@remix-run/node";
+import { useEffect, type FormEventHandler, type MouseEventHandler } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { withZod } from "@remix-validated-form/with-zod";
+import { useFetcher } from "@remix-run/react";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
-import { taskCreateFormValidator } from "./NewTask";
 import { FormInput } from "~/components/FormInput";
 import { FormTextArea } from "~/components/FormTextArea";
 import { FormSubmitButton } from "~/components/FormSubmitButton";
+import { taskCreateFormValidator } from "~/domains/tasks/NewTask";
+import type { SerializedTask } from "~/services/tasks.client";
 
 const zod = {
   title: z
@@ -30,8 +30,8 @@ const zod = {
 };
 
 type EditableTaskModalProps = {
-  task?: SerializeFrom<Task> | null,
-  onCancel: MouseEventHandler<HTMLButtonElement>,
+  taskId: number | null,
+  onCancel?: MouseEventHandler<HTMLButtonElement>,
   onSubmit?: FormEventHandler<HTMLFormElement>,
 }
 
@@ -45,21 +45,33 @@ export const taskUpdateFormData = zfd.formData({
 export const taskUpdateFormValidator = withZod(z.object(zod));
 
 export function EditableTaskModal(props: EditableTaskModalProps) {
-  if (props.task == null) {
+  const fetcher = useFetcher();
+  const isFetcherStatusInit = fetcher.state === "idle" && fetcher.data == null;
+  const isFetcherStatusLoaded = fetcher.state === "idle" && fetcher.data != null;
+
+  useEffect(() => {
+    if (isFetcherStatusInit) {
+      fetcher.load(`/tasks/${props.taskId}`);
+    }
+  }, [fetcher, isFetcherStatusInit, props.taskId]);
+
+  if (props.taskId == null || !isFetcherStatusLoaded) {
     return <></>;
   }
 
+  const task = fetcher.data as SerializedTask;
+
   return (
     <ValidatedForm
-      action={ `/tasks/${ props.task.id }` }
+      action={ `/tasks/${ props.taskId }` }
       method="post"
       validator={ taskCreateFormValidator }
       defaultValues={
         {
-          swimlaneId: props.task.swimlaneId ?? undefined,
-          title: props.task.title ?? undefined,
-          body: props.task.body ?? undefined,
-          status: props.task.status ?? undefined,
+          swimlaneId: task.swimlaneId ?? undefined,
+          title: task.title ?? undefined,
+          body: task.body ?? undefined,
+          status: task.status ?? undefined,
         }
       }
       resetAfterSubmit={ true }
@@ -76,5 +88,5 @@ export function EditableTaskModal(props: EditableTaskModalProps) {
         <FormSubmitButton text="Update" textProcessing="Updating..." />
       </div>
     </ValidatedForm>
-  )
+  );
 }
