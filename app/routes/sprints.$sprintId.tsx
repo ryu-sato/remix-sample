@@ -11,13 +11,9 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export const loader = async ({ params }: LoaderArgs) => {
-  if (params.sprintId == null) {
-    return json({}, { status: 400 });
-  }
-
-  const sprint = await db.sprint.findFirst({
+  const sprint = await db.sprint.findUnique({
     where: {
-      id: parseInt(params.sprintId),
+      id: Number(params.sprintId ?? 0) || 0,
     },
     include: {
       swimlanes: {
@@ -27,8 +23,7 @@ export const loader = async ({ params }: LoaderArgs) => {
       },
     }
   });
-
-  return json(sprint);
+  return json(sprint, { status: sprint != null ? 200 : 404 });
 };
 
 export default function Show() {

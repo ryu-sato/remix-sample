@@ -4,19 +4,15 @@ import { db } from "~/services/db.server";
 import { Link, useLoaderData } from "@remix-run/react";
 
 export const loader = async ({ params }: LoaderArgs) => {
-  if (params.kanbanId == null) {
-    return json({}, { status: 400 });
-  }
-
-  const kanban = await db.kanban.findFirst({
+  const kanban = await db.kanban.findUnique({
     where: {
-      id: parseInt(params.kanbanId),
+      id: Number(params.kanbanId ?? 0) || 0,
     },
     include: {
       sprints: true
     }
   });
-  return json(kanban);
+  return json(kanban, { status: kanban != null ? 200 : 404 });
 };
 
 export const meta: V2_MetaFunction = () => {

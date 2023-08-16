@@ -4,13 +4,9 @@ import { json, redirect } from "@remix-run/node";
 import { db } from "~/services/db.server";
 
 export const loader = async ({ params }: LoaderArgs) => {
-  if (params.taskId == null) {
-    return json({}, { status: 400 });
-  }
-
-  const task = await db.task.findFirst({
+  const task = await db.task.findUnique({
     where: {
-      id: parseInt(params.taskId),
+      id: Number(params.taskId ?? 0) || 0,
     },
     include: {
       swimlane: {
@@ -20,7 +16,7 @@ export const loader = async ({ params }: LoaderArgs) => {
       },
     },
   });
-  return json(task);
+  return json(task, { status: task != null ? 200 : 404 });
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
@@ -56,11 +52,11 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function Show() {
   const task = useLoaderData<typeof loader>();
 
-  const parentSprintLink = `/sprints/${task.swimlane.sprint.id}`;
-
   if (task == null) {
     return <></>
   }
+
+  const parentSprintLink = `/sprints/${task.swimlane.sprint.id}`;
 
   return (
     <div>

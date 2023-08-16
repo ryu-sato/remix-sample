@@ -3,22 +3,18 @@ import { json } from "@remix-run/node";
 import { db } from "~/services/db.server";
 
 export const action = async ({ request, params }: ActionArgs) => {
-  if (params.taskId == null) {
-    return json({}, { status: 400 });
-  }
-
   switch(request.method) {
     case 'PUT': {
       const body = await request.json();
       const task = await db.task.update({
         where: {
-          id: parseInt(params.taskId),
+          id: Number(params.taskId ?? 0) || 0,
         },
         data: {
           ...body,
         }
       });
-      return json(task);
+      return json(task, { status: task != null ? 200 : 404 });
     }
 
     default: {
