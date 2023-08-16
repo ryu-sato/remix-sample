@@ -11,20 +11,27 @@ import { FormInput } from '~/components/FormInput';
 import { FormSubmitButton } from '~/components/FormSubmitButton';
 import { FormTextArea } from '~/components/FormTextArea';
 
+const zod = {
+  title: z
+    .string()
+    .min(1, { message: "title is required" }),
+  body: z
+    .string()
+    .optional(),
+  swimlaneId: z
+    .coerce
+    .number()
+    .positive()
+    .int(),
+};
+
 const formData = zfd.formData({
-  title: zfd.text(),
-  body: zfd.text(z.string().optional()),
-  swimlaneId: zfd.numeric(z.number().min(1)),
+  title: zfd.text(zod.title),
+  body: zfd.text(zod.body),
+  swimlaneId: zfd.numeric(zod.swimlaneId),
 });
 
-const validator = withZod(
-  z.object({
-    title: z.string()
-      .min(1, { message: "title is required" }),
-    body: z.string().optional(),
-    swimlaneId: z.coerce.number().positive().int(),
-  })
-);
+const validator = withZod(z.object(zod));
 
 type NewTaskProps = {
   style?: React.CSSProperties,
