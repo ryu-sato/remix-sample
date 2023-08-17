@@ -12,7 +12,7 @@ export default function Show() {
       show={ true }
       onCancel={ cancelNewTaskModal }
       onSubmit={ createNewTaskModal }
-      swimlaneId={ swimlaneId }
+      swimlaneId={ Number(swimlaneId) }
     />
   </>
 

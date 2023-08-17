@@ -61,7 +61,7 @@ export function EditableTaskModal(props: EditableTaskModalProps) {
             swimlaneId: props.task.swimlaneId ?? undefined,
             title: props.task.title ?? undefined,
             body: props.task.body ?? undefined,
-            status: props.task.status ?? undefined,
+            status: (props.task.status as 'OPEN'|'INPROGRESS'|'TOVERIFY'|'DONE'|'REJECT') ?? undefined,
           }
         }
         resetAfterSubmit={ true }
