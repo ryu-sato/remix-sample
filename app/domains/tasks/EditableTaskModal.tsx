@@ -8,7 +8,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { FormInput } from "~/components/FormInput";
 import { FormTextArea } from "~/components/FormTextArea";
 import { FormSubmitButton } from "~/components/FormSubmitButton";
-import { taskCreateFormValidator } from "~/domains/tasks/NewTask";
+import { taskCreateFormValidator } from "~/domains/tasks/NewTaskModal";
 import type { SerializedTask } from "~/services/tasks.client";
 
 const zod = {

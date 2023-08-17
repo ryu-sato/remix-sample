@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import { SwimlaneTasks } from "~/domains/swimlanes/SwimlaneTasks";
 import { Droppable } from "~/components/Droppable";
-import { NewTask, taskCreateFormData } from "~/domains/tasks/NewTask";
 import * as Task from '~/services/tasks.client';
+import { Link } from "@remix-run/react";
 
 const swimlaneWithTasks = Prisma.validator<Prisma.SwimlaneArgs>()({
   include: {
@@ -31,7 +31,6 @@ function groupBy<ItemType>(array: ItemType[], getKey: (item: ItemType) => string
 
 export function SwimlaneRow(props: SwimlaneRowProps) {
   const [tasksGroupByStatus, setTasksGroupByStatus] = useState({} as { [key: string]: Task.SerializedTask[] });
-  const [hiddenNewTask, setHiddenNewTask] = useState(true);
 
   useEffect(() => {
     setTasksGroupByStatus(groupBy<Task.SerializedTask>(props.swimlane.tasks, t => t.status));
@@ -51,14 +50,14 @@ export function SwimlaneRow(props: SwimlaneRowProps) {
         className="col border py-3"
       >
         {/* タスク追加([+])ボタン */}
-        <button
+        <Link
           type="button"
-          className="btn btn-sm btn-secondary"
-          onClick={ showNewTask }
-          disabled={ !hiddenNewTask }
+          className="btn btn-sm btn-secondary d-inline-block"
+          to={ `./swimlanes/${ props.swimlane.id }/tasks/new` }
+          replace={ true }
         >
           &#043;
-        </button>
+        </Link>
         <div>{ props.swimlane.title }</div>
       </div>
 
@@ -69,18 +68,6 @@ export function SwimlaneRow(props: SwimlaneRowProps) {
             className="col border py-3"
             id={ status }
           >
-            { status == 'OPEN' &&
-              <NewTask
-                style={
-                  {
-                    display: hiddenNewTask ? 'none' : undefined,
-                  }
-                }
-                onCancel={ cancelNewTask }
-                onSubmit={ createNewTask }
-                swimlaneId={ props.swimlane.id }
-              />
-            }
             <SwimlaneTasks
               id={ status }
               tasks={ tasksGroupByStatus[status] || [] }
@@ -90,28 +77,6 @@ export function SwimlaneRow(props: SwimlaneRowProps) {
       }
     </DndContext>
   </>
-
-  function showNewTask(_event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    setHiddenNewTask(false);
-  }
-
-  function cancelNewTask(_event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    setHiddenNewTask(true);
-  }
-
-  function createNewTask(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const formData = new FormData(event.target as HTMLFormElement);
-    const newTaskData = taskCreateFormData.parse(formData);
-
-    (async () => {
-      const task = await Task.create(newTaskData);
-      setTasksGroupByStatus(groupBy<Task.SerializedTask>([...Object.values(tasksGroupByStatus).flat(), task], t => t.status));
-    })();
-
-    setHiddenNewTask(true);
-  }
 
   function moveTask(event: DragEndEvent) {
     const { active, over } = event;

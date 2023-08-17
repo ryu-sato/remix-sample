@@ -1,3 +1,4 @@
+import type { ShouldRevalidateFunction} from "@remix-run/react";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { SprintTable } from "~/domains/sprints/SprintTable";
 import type { V2_MetaFunction, LoaderArgs } from "@remix-run/node";
@@ -8,6 +9,10 @@ export const meta: V2_MetaFunction = () => {
   return [
     { title: "Sprint" },
   ];
+};
+
+export const shouldRevalidate: ShouldRevalidateFunction = () => {
+  return true;
 };
 
 export const loader = async ({ params }: LoaderArgs) => {

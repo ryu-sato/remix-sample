@@ -1,7 +1,7 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { db } from "~/services/db.server";
-import { taskCreateFormValidator } from "~/domains/tasks/NewTask";
+import { taskCreateFormValidator } from "~/domains/tasks/NewTaskModal";
 
 export const action = async ({ request }: ActionArgs) => {
 

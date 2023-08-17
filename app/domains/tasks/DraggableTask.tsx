@@ -32,6 +32,7 @@ export function DraggableTask(task: SerializeFrom<Task>) {
           <div>
             <Link
               to={ `./tasks/${ task.id }` }
+              replace={ true }
             >
               <span
                 className="btn btn-sm btn-outline-secondary"
