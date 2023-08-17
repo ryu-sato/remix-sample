@@ -9,9 +9,11 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
+import styles from 'bootstrap/dist/css/bootstrap.css';
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
+  { rel: "stylesheet", href: styles },
 ];
 
 export async function loader() {

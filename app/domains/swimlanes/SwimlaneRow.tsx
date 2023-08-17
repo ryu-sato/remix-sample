@@ -4,7 +4,8 @@ import type { DragEndEvent } from '@dnd-kit/core';
 import { DndContext } from '@dnd-kit/core';
 import { useEffect, useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
-import { SwimlaneTableData } from "~/domains/swimlanes/SwimlaneTableData";
+import { SwimlaneTasks } from "~/domains/swimlanes/SwimlaneTasks";
+import { Droppable } from "~/components/Droppable";
 import { NewTask, taskCreateFormData } from "~/domains/tasks/NewTask";
 import * as Task from '~/services/tasks.client';
 
@@ -14,7 +15,7 @@ const swimlaneWithTasks = Prisma.validator<Prisma.SwimlaneArgs>()({
   }
 });
 type SwimlaneWithTasks = Prisma.SwimlaneGetPayload<typeof swimlaneWithTasks>
-type SwimlaneTableRowProps = {
+type SwimlaneRowProps = {
   swimlane: SerializeFrom<SwimlaneWithTasks>,
   orderedTaskStatuses: Array<string>,
 }
@@ -28,7 +29,7 @@ function groupBy<ItemType>(array: ItemType[], getKey: (item: ItemType) => string
   }, {});
 }
 
-export function SwimlaneTableRow(props: SwimlaneTableRowProps) {
+export function SwimlaneRow(props: SwimlaneRowProps) {
   const [tasksGroupByStatus, setTasksGroupByStatus] = useState({} as { [key: string]: Task.SerializedTask[] });
   const [hiddenNewTask, setHiddenNewTask] = useState(true);
 
@@ -40,50 +41,54 @@ export function SwimlaneTableRow(props: SwimlaneTableRowProps) {
     return <></>
   }
 
-  return (
-    <tr key={ props.swimlane.id }>
-      <DndContext
-        onDragEnd={ moveTask }
+  return <>
+    {/* ドラッグによるタスクの移動はストーリー内のみ許可している */}
+    <DndContext
+      onDragEnd={ moveTask }
+    >
+      {/* ストーリー */}
+      <div
+        className="col border"
       >
-        <td>
-          <div>
-            <button
-              type="button"
-              onClick={ showNewTask }
-              disabled={ !hiddenNewTask }
-            >
-              &#043;
-            </button>
-          </div>
-          <div>{ props.swimlane.title }</div>
-        </td>
-        {
-          props.orderedTaskStatuses.map((status) => (
-            <td
-              key={ `${props.swimlane.id}_${status}` }
-            >
-              { status == 'OPEN' &&
-                <NewTask
-                  style={
-                    {
-                      display: hiddenNewTask ? 'none' : undefined,
-                    }
+        {/* タスク追加([+])ボタン */}
+        <button
+          type="button"
+          onClick={ showNewTask }
+          disabled={ !hiddenNewTask }
+        >
+          &#043;
+        </button>
+        <div>{ props.swimlane.title }</div>
+      </div>
+
+      { /* タスク */
+        props.orderedTaskStatuses.map((status) => (
+          <Droppable
+            key={ `${props.swimlane.id}_${status}` }
+            className="col border"
+            id={ status }
+          >
+            { status == 'OPEN' &&
+              <NewTask
+                style={
+                  {
+                    display: hiddenNewTask ? 'none' : undefined,
                   }
-                  onCancel={ cancelNewTask }
-                  onSubmit={ createNewTask }
-                  swimlaneId={ props.swimlane.id }
-                />
-              }
-              <SwimlaneTableData
-                id={ status }
-                tasks={ tasksGroupByStatus[status] || [] }
+                }
+                onCancel={ cancelNewTask }
+                onSubmit={ createNewTask }
+                swimlaneId={ props.swimlane.id }
               />
-            </td>
-          ))
-        }
-      </DndContext>
-    </tr>
-  )
+            }
+            <SwimlaneTasks
+              id={ status }
+              tasks={ tasksGroupByStatus[status] || [] }
+            />
+          </Droppable>
+        ))
+      }
+    </DndContext>
+  </>
 
   function showNewTask(_event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     setHiddenNewTask(false);

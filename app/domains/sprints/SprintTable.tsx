@@ -1,8 +1,8 @@
 import type { SerializeFrom } from "@remix-run/node";
 import { Prisma } from "@prisma/client";
 import { DndContext } from '@dnd-kit/core';
-import { SwimlaneTableRow } from "~/domains/swimlanes/SwimlaneTableRow";
-import { SwimlaneTableHeader } from "~/domains/swimlanes/SwimlaneTableHeader";
+import { SwimlaneRow } from "~/domains/swimlanes/SwimlaneRow";
+import { SwimlaneHeader } from "~/domains/swimlanes/SwimlaneHeader";
 
 const sprintWithSwimlanes = Prisma.validator<Prisma.SprintArgs>()({
   include: {
@@ -21,25 +21,26 @@ export function SprintTable(sprint: SerializeFrom<SprintWithSwimlanes>) {
   }
 
   const orderedTaskStatuses = ['OPEN', 'INPROGRESS', 'TOVERIFY', 'FEEDBACK', 'DONE', 'REJECT'];
+  const rowClassName = `row row-cols-${ 1 + orderedTaskStatuses.length }`;
   const swimlanes = <>
-    <DndContext>
-      <table border={1}>
-        <thead>
-          <SwimlaneTableHeader
+    <div className="container-fluid">
+      <div className={ rowClassName }>
+        <SwimlaneHeader
+          orderedTaskStatuses={ orderedTaskStatuses }
+        />
+      </div>
+      { sprint.swimlanes.map((swimlane) => (
+        <div
+          className={ rowClassName }
+          key={ swimlane.id }
+        >
+          <SwimlaneRow
+            swimlane={ swimlane }
             orderedTaskStatuses={ orderedTaskStatuses }
           />
-        </thead>
-        <tbody>
-          { sprint.swimlanes.map((swimlane) => (
-            <SwimlaneTableRow
-              key={ swimlane.id }
-              swimlane={ swimlane }
-              orderedTaskStatuses={ orderedTaskStatuses }
-            />
-          )) }
-        </tbody>
-      </table>
-    </DndContext>
+        </div>
+      )) }
+    </div>
   </>
 
   return (
@@ -51,5 +52,5 @@ export function SprintTable(sprint: SerializeFrom<SprintWithSwimlanes>) {
         { swimlanes }
       </div>
     </div>
-  )
+  );
 }
