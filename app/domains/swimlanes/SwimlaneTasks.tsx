@@ -14,9 +14,7 @@ export function SwimlaneTasks(props: SwimlaneTasksProps) {
       items={ props.tasks.map(it => String(it.id)) }
       strategy={ rectSortingStrategy }
     >
-      <div>
-        { props.tasks.map((task) => <DraggableTask key={ String(task.id) } { ...task } />) }
-      </div>
+      { props.tasks.map((task) => <DraggableTask key={ String(task.id) } { ...task } />) }
     </SortableContext>
   )
 }
