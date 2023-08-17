@@ -52,7 +52,7 @@ export function EditableTaskModal(props: EditableTaskModalProps) {
   const isFetcherStatusLoaded = fetcher.state === "idle" && fetcher.data != null;
 
   useEffect(() => {
-    if (isFetcherStatusInit) {
+    if (props.taskId != null && isFetcherStatusInit) {
       fetcher.load(`/tasks/${props.taskId}`);
     }
   }, [fetcher, isFetcherStatusInit, props.taskId]);

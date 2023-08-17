@@ -1,7 +1,6 @@
 import type { Task } from "@prisma/client";
 import type { SerializeFrom } from "@remix-run/node";
 import { Link } from "@remix-run/react";
-import { createSearchParams } from "react-router-dom";
 import { SortableItem } from "~/components/SortableItem";
 
 export function DraggableTask(task: SerializeFrom<Task>) {
@@ -21,30 +20,29 @@ export function DraggableTask(task: SerializeFrom<Task>) {
       <div
         className="card-body"
       >
-        <Link
-          to={ "/tasks/" + String(task.id) }
+        <div
+          className="d-flex"
         >
-          <div>
+          <Link
+            to={ `/tasks/${ task.id }` }
+            className="d-inline-block flex-fill"
+          >
             { task.id }
+          </Link>
+          <div>
+            <Link
+              to={ `./tasks/${ task.id }` }
+            >
+              <span
+                className="btn btn-sm btn-outline-secondary"
+              >
+                &#9998;
+              </span>
+            </Link>
           </div>
-        </Link>
+        </div>
 
         { task.title }
-
-        <Link
-          to={{
-            search: createSearchParams({
-              taskId: String(task.id),
-            }).toString(),
-          }}
-          preventScrollReset={ true }
-          replace={ true }
-          reloadDocument={ false }
-        >
-          <button>
-            &#9998;
-          </button>
-        </Link>
       </div>
     </SortableItem>
   )
