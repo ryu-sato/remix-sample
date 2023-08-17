@@ -10,8 +10,17 @@ export function DraggableTask(task: SerializeFrom<Task>) {
   }
 
   return (
-    <SortableItem id={ String(task.id) }>
-      <div style={{ width: "100px", height: "100px" }}>
+    <SortableItem
+      id={ String(task.id) }
+      className="card d-inline-flex m-1"
+      style={{
+        width: "150px",
+        height: "150px",
+      }}
+    >
+      <div
+        className="card-body"
+      >
         <Link
           to={ "/tasks/" + String(task.id) }
         >

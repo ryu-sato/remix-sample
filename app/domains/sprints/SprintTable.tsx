@@ -23,7 +23,7 @@ export function SprintTable(sprint: SerializeFrom<SprintWithSwimlanes>) {
   const orderedTaskStatuses = ['OPEN', 'INPROGRESS', 'TOVERIFY', 'FEEDBACK', 'DONE', 'REJECT'];
   const rowClassName = `row row-cols-${ 1 + orderedTaskStatuses.length }`;
   const swimlanes = <>
-    <div className="container-fluid">
+    <div className="container-fluid m-4">
       <div className={ rowClassName }>
         <SwimlaneHeader
           orderedTaskStatuses={ orderedTaskStatuses }

@@ -48,11 +48,12 @@ export function SwimlaneRow(props: SwimlaneRowProps) {
     >
       {/* ストーリー */}
       <div
-        className="col border"
+        className="col border py-3"
       >
         {/* タスク追加([+])ボタン */}
         <button
           type="button"
+          className="btn btn-sm btn-secondary"
           onClick={ showNewTask }
           disabled={ !hiddenNewTask }
         >
@@ -65,7 +66,7 @@ export function SwimlaneRow(props: SwimlaneRowProps) {
         props.orderedTaskStatuses.map((status) => (
           <Droppable
             key={ `${props.swimlane.id}_${status}` }
-            className="col border"
+            className="col border py-3"
             id={ status }
           >
             { status == 'OPEN' &&

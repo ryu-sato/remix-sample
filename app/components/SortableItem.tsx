@@ -4,6 +4,8 @@ import React from 'react';
 
 type SortableItemProps = {
   id: string,
+  style?: React.CSSProperties,
+  className?: string,
   children: React.ReactNode,
 }
 
@@ -19,19 +21,21 @@ export function SortableItem(props: SortableItemProps) {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    ...props.style,
   };
 
   return (
-    <button
+    <div
       ref={ setNodeRef }
       style={{
         ...style,
         cursor: "move",
       }}
+      className={ props.className }
       { ...attributes }
       { ...listeners }
     >
       { props.children }
-    </button>
+    </div>
   );
 }
