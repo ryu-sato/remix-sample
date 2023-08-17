@@ -5,6 +5,8 @@ import { json } from "@remix-run/node";
 import { useSearchParams } from "react-router-dom";
 import { EditableTaskModal } from "~/domains//tasks/EditableTaskModal";
 import { db } from "~/services/db.server";
+import { useEffect, useState } from "react";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -42,6 +44,7 @@ export default function Show() {
     <SprintTable { ...sprint } />
     { showEditableTaskModal &&
       <EditableTaskModal
+        show={ showEditableTaskModal }
         taskId={ Number(searchParams.get('taskId')) }
         onCancel={ hideEditableTaskModal }
       />

@@ -4,6 +4,7 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { useFetcher } from "@remix-run/react";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { FormInput } from "~/components/FormInput";
 import { FormTextArea } from "~/components/FormTextArea";
 import { FormSubmitButton } from "~/components/FormSubmitButton";
@@ -31,6 +32,7 @@ const zod = {
 
 type EditableTaskModalProps = {
   taskId: number | null,
+  show?: boolean,
   onCancel?: MouseEventHandler<HTMLButtonElement>,
   onSubmit?: FormEventHandler<HTMLFormElement>,
 }
@@ -62,31 +64,38 @@ export function EditableTaskModal(props: EditableTaskModalProps) {
   const task = fetcher.data as SerializedTask;
 
   return (
-    <ValidatedForm
-      action={ `/tasks/${ props.taskId }` }
-      method="post"
-      validator={ taskCreateFormValidator }
-      defaultValues={
-        {
-          swimlaneId: task.swimlaneId ?? undefined,
-          title: task.title ?? undefined,
-          body: task.body ?? undefined,
-          status: task.status ?? undefined,
+    <Modal isOpen={ props.show } id="domains.tasks.EditableTaskModal">
+      <ValidatedForm
+        action={ `/tasks/${ props.taskId }` }
+        method="post"
+        validator={ taskCreateFormValidator }
+        defaultValues={
+          {
+            swimlaneId: task.swimlaneId ?? undefined,
+            title: task.title ?? undefined,
+            body: task.body ?? undefined,
+            status: task.status ?? undefined,
+          }
         }
-      }
-      resetAfterSubmit={ true }
-      onSubmit={ (_data, event) => props.onSubmit && props.onSubmit(event) }
-    >
-      <input type="hidden" name="intent" value="put" />
+        resetAfterSubmit={ true }
+        onSubmit={ (_data, event) => props.onSubmit && props.onSubmit(event) }
+      >
+        <input type="hidden" name="intent" value="put" />
 
-      <FormInput type="number" name="swimlaneId" label="swimlaneId" />
-      <FormInput type="text" name="title" label="title" />
-      <FormInput type="text" name="status" label="status" />
-      <FormTextArea name="body" label="body" />
-      <div>
-        <button type="reset" onClick={ props.onCancel }>Cancel</button>
-        <FormSubmitButton text="Update" textProcessing="Updating..." />
-      </div>
-    </ValidatedForm>
+        <ModalHeader>
+          Edit task
+        </ModalHeader>
+        <ModalBody>
+          <FormInput type="number" name="swimlaneId" label="swimlaneId" />
+          <FormInput type="text" name="title" label="title" />
+          <FormInput type="text" name="status" label="status" />
+          <FormTextArea name="body" label="body" />
+        </ModalBody>
+        <ModalFooter>
+          <button type="reset" className="btn btn-sm btn-secondary" onClick={ props.onCancel }>Cancel</button>
+          <FormSubmitButton text="Update" textProcessing="Updating..." />
+        </ModalFooter>
+      </ValidatedForm>
+    </Modal>
   );
 }
