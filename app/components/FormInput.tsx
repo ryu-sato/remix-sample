@@ -17,8 +17,8 @@ export const FormInput = ({ name, label, type, hidden = false }: FormInputProps)
 
   return (
     <div style={ style }>
-      <label htmlFor={ name }>{ label }</label>
-      <input type={ type } {...getInputProps({ id: name })} />
+      <label htmlFor={ name } className="form-label">{ label }</label>
+      <input type={ type } className="form-control" {...getInputProps({ id: name })} />
       { error && (
         <span style={{ color: "red" }}>{ error }</span>
       )}

@@ -12,7 +12,7 @@ export const FormSubmitButton = (props: FormSubmitButtonProps) => {
   const textProcessing = props.textProcessing || 'Submitting...';
 
   return (
-    <button type="submit" disabled={ isSubmitting }>
+    <button type="submit" className="btn btn-sm btn-primary" disabled={ isSubmitting }>
       { isSubmitting ? textProcessing : text }
     </button>
   );

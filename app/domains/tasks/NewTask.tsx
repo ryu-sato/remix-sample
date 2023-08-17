@@ -81,7 +81,7 @@ export function NewTask(props: NewTaskProps) {
             <FormInput type="text" name="title" label="title" />
             <FormTextArea name="body" label="body" />
             <div>
-              <button type="button" onClick={ props.onCancel }>Cancel</button>
+              <button type="button" className="btn btn-sm btn-secondary" onClick={ props.onCancel }>Cancel</button>
               <FormSubmitButton text="Create" textProcessing="Creating..." />
             </div>
           </ValidatedForm>

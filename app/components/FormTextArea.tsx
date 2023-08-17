@@ -10,8 +10,8 @@ export const FormTextArea = ({ name, label }: FormTextAreaProps) => {
 
   return (
     <div>
-      <label htmlFor={ name }>{ label }</label>
-      <textarea {...getInputProps({ id: name })} />
+      <label htmlFor={ name }className="form-label">{ label }</label>
+      <textarea className="form-control" {...getInputProps({ id: name })} />
       { error && (
         <span style={{ color: "red" }}>{ error }</span>
       )}
