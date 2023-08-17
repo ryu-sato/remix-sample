@@ -1,20 +1,31 @@
-import { useNavigate } from "@remix-run/react";
-import { useParams } from "react-router-dom";
+import type { LoaderArgs } from "@remix-run/node";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import { EditableTaskModal } from "~/domains//tasks/EditableTaskModal";
+import { json } from "@remix-run/node";
+import { db } from "~/services/db.server";
+
+export const loader = async ({ params }: LoaderArgs) => {
+  const sprint = await db.task.findUnique({
+    where: {
+      id: Number(params.taskId ?? 0) || 0,
+    },
+  });
+  return json(sprint, { status: sprint != null ? 200 : 404 });
+};
 
 export default function Show() {
+  const task = useLoaderData<typeof loader>();
   const navigate = useNavigate();
-  const { taskId } = useParams();
 
   return <>
     <EditableTaskModal
       show={ true }
-      taskId={ Number(taskId) }
+      task={ task }
       onCancel={ hideEditableTaskModal }
     />
   </>
 
   function hideEditableTaskModal(_event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    return navigate('../');
+    return navigate('..', { replace: true });
   }
 }

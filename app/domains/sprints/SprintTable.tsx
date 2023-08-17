@@ -1,6 +1,5 @@
 import type { SerializeFrom } from "@remix-run/node";
 import { Prisma } from "@prisma/client";
-import { DndContext } from '@dnd-kit/core';
 import { SwimlaneRow } from "~/domains/swimlanes/SwimlaneRow";
 import { SwimlaneHeader } from "~/domains/swimlanes/SwimlaneHeader";
 

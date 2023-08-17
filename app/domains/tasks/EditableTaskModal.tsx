@@ -1,7 +1,6 @@
-import { useEffect, type FormEventHandler, type MouseEventHandler } from "react";
+import { type FormEventHandler, type MouseEventHandler } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { withZod } from "@remix-validated-form/with-zod";
-import { useFetcher } from "@remix-run/react";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
@@ -31,7 +30,7 @@ const zod = {
 };
 
 type EditableTaskModalProps = {
-  taskId: number | null,
+  task: SerializedTask | null,
   show?: boolean,
   onCancel?: MouseEventHandler<HTMLButtonElement>,
   onSubmit?: FormEventHandler<HTMLFormElement>,
@@ -47,34 +46,22 @@ export const taskUpdateFormData = zfd.formData({
 export const taskUpdateFormValidator = withZod(z.object(zod));
 
 export function EditableTaskModal(props: EditableTaskModalProps) {
-  const fetcher = useFetcher();
-  const isFetcherStatusInit = fetcher.state === "idle" && fetcher.data == null;
-  const isFetcherStatusLoaded = fetcher.state === "idle" && fetcher.data != null;
-
-  useEffect(() => {
-    if (props.taskId != null && isFetcherStatusInit) {
-      fetcher.load(`/tasks/${props.taskId}`);
-    }
-  }, [fetcher, isFetcherStatusInit, props.taskId]);
-
-  if (props.taskId == null || !isFetcherStatusLoaded) {
+  if (props.task == null) {
     return <></>;
   }
-
-  const task = fetcher.data as SerializedTask;
 
   return (
     <Modal isOpen={ props.show } id="domains.tasks.EditableTaskModal">
       <ValidatedForm
-        action={ `/tasks/${ props.taskId }` }
+        action={ `/tasks/${ props.task.id }` }
         method="post"
         validator={ taskCreateFormValidator }
         defaultValues={
           {
-            swimlaneId: task.swimlaneId ?? undefined,
-            title: task.title ?? undefined,
-            body: task.body ?? undefined,
-            status: task.status ?? undefined,
+            swimlaneId: props.task.swimlaneId ?? undefined,
+            title: props.task.title ?? undefined,
+            body: props.task.body ?? undefined,
+            status: props.task.status ?? undefined,
           }
         }
         resetAfterSubmit={ true }
