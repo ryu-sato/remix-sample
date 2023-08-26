@@ -49,16 +49,27 @@ export function SwimlaneRow(props: SwimlaneRowProps) {
       <div
         className="col border py-3"
       >
-        {/* タスク追加([+])ボタン */}
-        <Link
-          type="button"
-          className="btn btn-sm btn-secondary d-inline-block"
-          to={ `./swimlanes/${ props.swimlane.id }/tasks/new` }
-          replace={ true }
+        <div
+          className="d-flex"
         >
-          &#043;
-        </Link>
-        <div>{ props.swimlane.title }</div>
+          <Link
+            to={ `/swimlanes/${ props.swimlane.id }` }
+            className="d-inline-block flex-fill"
+          >
+            { props.swimlane.id }
+          </Link>
+          {/* タスク追加([+])ボタン */}
+          <Link
+            to={ `./swimlanes/${ props.swimlane.id }/tasks/new` }
+            replace={ true }
+            className="btn btn-sm btn-secondary"
+          >
+            &#043;
+          </Link>
+        </div>
+        <div>
+          <div>{ props.swimlane.title }</div>
+        </div>
       </div>
 
       { /* タスク */
