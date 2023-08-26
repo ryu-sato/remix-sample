@@ -13,7 +13,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   return json(sprint, { status: sprint != null ? 200 : 404 });
 };
 
-export default function Show() {
+export default function Edit() {
   const task = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 

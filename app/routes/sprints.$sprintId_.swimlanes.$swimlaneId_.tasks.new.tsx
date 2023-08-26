@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { NewTaskModal, taskCreateFormData } from "~/domains/tasks/NewTaskModal";
 import * as Task from '~/services/tasks.client';
 
-export default function Show() {
+export default function New() {
   const navigate = useNavigate();
   const { swimlaneId } = useParams();
 
