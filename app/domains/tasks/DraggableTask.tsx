@@ -69,7 +69,6 @@ export function DraggableTask(task: DraggableTaskProps) {
     const bgColorG = Number(bgColorString.substr(3, 4));
     const bgColorB = Number(bgColorString.substr(5, 6));
     const textColor = `#${ (0xFF - bgColorR).toString(16) }${ (0xFF - bgColorG).toString(16) }${ (0xFF - bgColorB).toString(16) }`;
-    console.log(`textColor: ${ textColor }`);
     return textColor;
   }
 }
