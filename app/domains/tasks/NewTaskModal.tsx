@@ -32,7 +32,6 @@ export function NewTaskModal(props: NewTaskModalProps) {
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data == null) {
-      console.log("fetcher.load('/users.json');");
       fetcher.load('/users.json');
     }
   }, [fetcher]);
