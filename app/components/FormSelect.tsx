@@ -14,17 +14,17 @@ type FormInputProps = {
 
 export const FormSelect = ({ name, label, options, nullable = true }: FormInputProps) => {
   const { error } = useField(name);
-  const [value] = useControlField<string>(name);
+  const [value] = useControlField<number>(name);
 
   return (
     <div>
       <label htmlFor={ name } className="form-label">{ label }</label>
-      <select name={ name } className="form-control">
+      <select name={ name } className="form-control" defaultValue={ value }>
         { nullable &&
           <option value=""></option>
         }
         { options.map(o => (
-          <option key={ o.value.toString() } value={ o.value } selected={ o.value == value }>{ o.label }</option>
+          <option key={ o.value.toString() } value={ o.value }>{ o.label }</option>
         ))}
       </select>
       { error && (
