@@ -9,7 +9,7 @@ export const action = async ({ request }: ActionArgs) => {
     case 'POST': {
       const validationResult = await taskCreateFormValidator.validate(await request.json());
       if (validationResult.error) {
-        console.log(validationResult.error);
+        console.warn(validationResult.error);
         return json({}, { status: 400 });
       }
 
