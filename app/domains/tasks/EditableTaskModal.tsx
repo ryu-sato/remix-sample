@@ -18,7 +18,7 @@ const zod = TaskSchema.omit({
   id: true,
   createdAt: true,
   updatedAt: true,
-});
+}).partial();
 
 type EditableTaskModalProps = {
   task: SerializedTask | null,
