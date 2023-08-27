@@ -23,7 +23,11 @@ export const loader = async ({ params }: LoaderArgs) => {
     include: {
       swimlanes: {
         include: {
-          tasks: true,
+          tasks: {
+            include: {
+              assignee: true,
+            },
+          },
         }
       },
     }

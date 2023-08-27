@@ -9,12 +9,16 @@ import { Droppable } from "~/components/Droppable";
 import * as Task from '~/services/tasks.client';
 import { Link } from "@remix-run/react";
 
-const swimlaneWithTasks = Prisma.validator<Prisma.SwimlaneArgs>()({
+const swimlaneWithTasksAndAssignees = Prisma.validator<Prisma.SwimlaneArgs>()({
   include: {
-    tasks: true,
+    tasks: {
+      include: {
+        assignee: true,
+      },
+    },
   }
 });
-type SwimlaneWithTasks = Prisma.SwimlaneGetPayload<typeof swimlaneWithTasks>
+type SwimlaneWithTasks = Prisma.SwimlaneGetPayload<typeof swimlaneWithTasksAndAssignees>
 type SwimlaneRowProps = {
   swimlane: SerializeFrom<SwimlaneWithTasks>,
   orderedTaskStatuses: Array<string>,

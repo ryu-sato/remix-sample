@@ -1,11 +1,10 @@
-import type { Task } from "@prisma/client";
 import type { SerializeFrom } from "@remix-run/node";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
-import { DraggableTask } from "~/domains/tasks/DraggableTask";
+import { DraggableTask, type TaskWithAssignee } from "~/domains/tasks/DraggableTask";
 
 type SwimlaneTasksProps = {
   id: string,
-  tasks: SerializeFrom<Task[]>,
+  tasks: SerializeFrom<TaskWithAssignee[]>,
 }
 
 export function SwimlaneTasks(props: SwimlaneTasksProps) {

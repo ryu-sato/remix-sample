@@ -7,7 +7,11 @@ const sprintWithSwimlanes = Prisma.validator<Prisma.SprintArgs>()({
   include: {
     swimlanes: {
       include: {
-        tasks: true,
+        tasks: {
+          include: {
+            assignee: true,
+          },
+        },
       },
     },
   },
