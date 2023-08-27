@@ -8,7 +8,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     case 'PUT': {
       const validationResult = await taskUpdateFormValidator.validate(await request.json());
       if (validationResult.error) {
-        console.log(validationResult.error);
+        console.warn(validationResult.error);
         return json({}, { status: 400 });
       }
 
