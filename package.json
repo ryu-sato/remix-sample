@@ -1,20 +1,21 @@
 {
   "private": true,
   "sideEffects": false,
+  "type": "module",
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev",
-    "start": "remix-serve build",
+    "dev": "remix dev --manual",
+    "start": "remix-serve ./build/index.js",
     "typecheck": "tsc"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.0.8",
     "@dnd-kit/sortable": "^7.0.2",
     "@prisma/client": "^5.0.0",
-    "@remix-run/css-bundle": "^1.18.1",
-    "@remix-run/node": "^1.18.1",
-    "@remix-run/react": "^1.18.1",
-    "@remix-run/serve": "^1.18.1",
+    "@remix-run/css-bundle": "^2.0.1",
+    "@remix-run/node": "^2.0.1",
+    "@remix-run/react": "^2.0.1",
+    "@remix-run/serve": "^2.0.1",
     "@remix-validated-form/with-zod": "^2.0.6",
     "axios": "^1.4.0",
     "bootstrap": "^5.1.3",
@@ -28,11 +29,11 @@
     "zod-prisma-types": "^2.7.9"
   },
   "devDependencies": {
-    "@remix-run/dev": "^1.18.1",
-    "@remix-run/eslint-config": "^1.18.1",
+    "@remix-run/dev": "^2.0.1",
+    "@remix-run/eslint-config": "^2.0.1",
     "@types/bootstrap": "^5.2.6",
-    "@types/react": "^18.0.35",
-    "@types/react-dom": "^18.0.11",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
     "eslint": "^8.38.0",
     "prisma": "^5.0.0",
     "prisma-repl": "^1.4.0",
